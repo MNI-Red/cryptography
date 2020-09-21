@@ -4,9 +4,6 @@ Z = ord("Z")
 def offset_char(char, offset):
     return chr(((ord(char) + offset) - A)%(Z - A + 1) +A) #The inner arithmetic always returns an ASCII value from A to Z
 
-# def restrict_range(a, b):
-
-
 # Caesar Cipher
 # Arguments: string, integer
 # Returns: string
@@ -31,12 +28,23 @@ def decrypt_caesar(ciphertext, offset):
 # Arguments: string, string
 # Returns: string
 def encrypt_vigenere(plaintext, keyword):
-    pass
+    len_in = len(plaintext)
+    len_key = len(keyword)
+    key_string = (len_in//len_key)*keyword + keyword[,len_in%len_key]
+    print(key_string)
+    for i in range(len_in):
+        offset_char(plaintext[i], ord(plaintext[i])-ord(key_string[i]))
 
 # Arguments: string, string
 # Returns: string
 def decrypt_vigenere(ciphertext, keyword):
-    pass
+    #this method is exactly the same as the previous one but the offset is negative
+    len_in = len(ciphertext)
+    len_key = len(keyword)
+    key_string = (len_in//len_key)*keyword + keyword[,len_in%len_key]
+    print(key_string)
+    for i in range(len_in):
+        offset_char(plaintext[i], ord(key_string[i]) - ord(plaintext[i]))
 
 # Merkle-Hellman Knapsack Cryptosystem
 # Arguments: integer
@@ -61,9 +69,9 @@ def decrypt_mhkc(ciphertext, private_key):
 
 def main():
     # Testing code here
-    enc = encrypt_caesar("PYTHON", 3)
+    enc = encrypt_vigenere("ATTACKATDAWN", "LEMON")
     print(enc)
-    print(decrypt_caesar(enc, 3))
+    print(decrypt_caesar(enc, "LEMON"))
 
 if __name__ == "__main__":
     main()
