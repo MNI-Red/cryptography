@@ -30,10 +30,12 @@ def decrypt_caesar(ciphertext, offset):
 def encrypt_vigenere(plaintext, keyword):
     len_in = len(plaintext)
     len_key = len(keyword)
-    key_string = (len_in//len_key)*keyword + keyword[,len_in%len_key]
+    key_string = (len_in//len_key)*keyword + keyword[:(len_in%len_key)]
     print(key_string)
+    to_ret = ""
     for i in range(len_in):
-        offset_char(plaintext[i], ord(plaintext[i])-ord(key_string[i]))
+        to_ret += offset_char(plaintext[i], ord(plaintext[i])%A)
+    return to_ret
 
 # Arguments: string, string
 # Returns: string
@@ -41,10 +43,12 @@ def decrypt_vigenere(ciphertext, keyword):
     #this method is exactly the same as the previous one but the offset is negative
     len_in = len(ciphertext)
     len_key = len(keyword)
-    key_string = (len_in//len_key)*keyword + keyword[,len_in%len_key]
+    key_string = (len_in//len_key)*keyword + keyword[:(len_in%len_key)]
     print(key_string)
+    to_ret = ""
     for i in range(len_in):
-        offset_char(plaintext[i], ord(key_string[i]) - ord(plaintext[i]))
+        to_ret += offset_char(plaintext[i],  -ord(plaintext[i])%A)
+    return to_ret
 
 # Merkle-Hellman Knapsack Cryptosystem
 # Arguments: integer
