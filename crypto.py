@@ -2,7 +2,10 @@ A = ord("A")
 Z = ord("Z")
 
 def offset_char(char, offset):
-    return chr(((ord(char) + offset) - A)%(Z - A + 1) +A) #The inner arithmetic always returns an ASCII value from A to Z
+    # print(char, offset)
+    to_ret = chr(((ord(char) + offset) - A)%(Z - A + 1) +A) #The inner arithmetic always returns an ASCII value from A to Z
+    # print(to_ret)
+    return to_ret
 
 # Caesar Cipher
 # Arguments: string, integer
@@ -31,10 +34,10 @@ def encrypt_vigenere(plaintext, keyword):
     len_in = len(plaintext)
     len_key = len(keyword)
     key_string = (len_in//len_key)*keyword + keyword[:(len_in%len_key)]
-    print(key_string)
+    # print(key_string)
     to_ret = ""
     for i in range(len_in):
-        to_ret += offset_char(plaintext[i], ord(plaintext[i])%A)
+        to_ret += offset_char(plaintext[i], ord(key_string[i])%A)
     return to_ret
 
 # Arguments: string, string
@@ -44,10 +47,12 @@ def decrypt_vigenere(ciphertext, keyword):
     len_in = len(ciphertext)
     len_key = len(keyword)
     key_string = (len_in//len_key)*keyword + keyword[:(len_in%len_key)]
-    print(key_string)
+    # print(key_string)
     to_ret = ""
     for i in range(len_in):
-        to_ret += offset_char(plaintext[i],  -ord(plaintext[i])%A)
+        # offset = ord(ciphertext[i]) - ord(key_string[i])
+    
+        to_ret += offset_char(ciphertext[i], -(ord(key_string[i])%A))
     return to_ret
 
 # Merkle-Hellman Knapsack Cryptosystem
@@ -75,7 +80,7 @@ def main():
     # Testing code here
     enc = encrypt_vigenere("ATTACKATDAWN", "LEMON")
     print(enc)
-    print(decrypt_caesar(enc, "LEMON"))
+    print(decrypt_vigenere(enc, "LEMON"))
 
 if __name__ == "__main__":
     main()
