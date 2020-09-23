@@ -1,3 +1,6 @@
+import random as rand
+import math
+
 A = ord("A")
 Z = ord("Z")
 
@@ -50,8 +53,6 @@ def decrypt_vigenere(ciphertext, keyword):
     # print(key_string)
     to_ret = ""
     for i in range(len_in):
-        # offset = ord(ciphertext[i]) - ord(key_string[i])
-    
         to_ret += offset_char(ciphertext[i], -(ord(key_string[i])%A))
     return to_ret
 
@@ -59,22 +60,62 @@ def decrypt_vigenere(ciphertext, keyword):
 # Arguments: integer
 # Returns: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 def generate_private_key(n=8):
-    pass
+    W = []
+    for i in range(n+1):
+        W.append(rand.randint(sum(W)+1, sum(W)*2))
+    Q = W.pop(-1)
+    W = tuple(W)
+    R = coprime(Q) 
+    return (W, Q, R)
+
+def coprime(a):
+    co = a
+    while gcd(a, co) != 1:
+        co = rand.randint(2, a-1)
+    return co
 
 # Arguments: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 # Returns: tuple B - a length-n tuple of integers
 def create_public_key(private_key):
-    pass
+    B = []
+    W = private_key[0]
+    Q = private_key[1]
+    R = private_key[2]
+    for i in W:
+        B.append(R*i%Q)
+    return tuple(B)
 
-# Arguments: string, tuple (W, Q, R)
+# Arguments: string, tuple (B)
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
-    pass
+    A = []
+    for i in plaintext:
+        bit_list = [int(z) for z in bin(ord(i)).zfill(8)]  
+        #makes the list of bits of the ASCII value of the character i in plaintext
+        A.append(sum([bit_list[i] * public_key[i] for i in range(len(bit_list))])) 
+        #appends the sum of the bit * the random integer in B to the end of the list A
+    return A
 
-# Arguments: list of integers, tuple B - a length-n tuple of integers
+# Arguments: list of integers, private key (W, Q, R) with W a tuple.
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
-    pass
+    W = private_key[0]
+    Q = private_key[1]
+    R = private_key[2]
+    to_ret = ""
+    for i in ciphertext:
+        bit_list = []
+        # bit_list = [0 if j > 1 else 1 and i:= i-j for j in W.reverse()]
+        for j in W.reverse():
+            if j > i:
+                bit_list.append(0)
+            else:
+                bit_list.append(1)
+                i = i - j
+        to_ret.append(chr(int(''.join(bit_list), 2))) 
+        #convert the string of bits from binary to decimal then convert that to a char and append it to the return string
+    return to_ret
+
 
 def main():
     # Testing code here
