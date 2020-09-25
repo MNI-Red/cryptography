@@ -60,8 +60,8 @@ def decrypt_vigenere(ciphertext, keyword):
 # Arguments: integer
 # Returns: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 def generate_private_key(n=8):
-    W = []
-    for i in range(n+1):
+    W = [rand.randint()]
+    for i in range(1, n):
         W.append(rand.randint(sum(W)+1, sum(W)*2))
     Q = W.pop(-1)
     W = tuple(W)
@@ -96,6 +96,13 @@ def encrypt_mhkc(plaintext, public_key):
         #appends the sum of the bit * the random integer in B to the end of the list A
     return A
 
+def find_S(R, Q):
+    R = R % Q; 
+    for S in range(1, Q) : 
+        if ((R * S) % Q == 1) : 
+            return S 
+    return 1
+
 # Arguments: list of integers, private key (W, Q, R) with W a tuple.
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
@@ -105,7 +112,9 @@ def decrypt_mhkc(ciphertext, private_key):
     to_ret = ""
     for i in ciphertext:
         bit_list = []
+        i = i * S % Q 
         # bit_list = [0 if j > 1 else 1 and i:= i-j for j in W.reverse()]
+        
         for j in W.reverse():
             if j > i:
                 bit_list.append(0)
