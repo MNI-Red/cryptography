@@ -106,8 +106,7 @@ def find_S(R, Q):
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
     W = list(private_key[0])
-    W.reverse()
-    print("Slot values: " + str(W))
+    W.reverse() #reverse the superincreasing series to use it for creating the binary representation of the character
     Q = private_key[1]
     R = private_key[2]
     S = find_S(R, Q)
@@ -115,8 +114,8 @@ def decrypt_mhkc(ciphertext, private_key):
     for C in ciphertext:
         bit_list = []
         C_prime = (C * S) % Q 
-        # bit_list = [0 if j > i else 1 and i:= i-j for j in W]
-        print(C_prime)
+        # bit_list = [0 if j > C else 1 C:= C-j for j in W] 
+        # ^This is the list comprehension version of the for loop below but I don't know the := operator well enough to make it work
         for j in W:
             # print(i)
             if j <= C_prime:
@@ -125,18 +124,12 @@ def decrypt_mhkc(ciphertext, private_key):
             else:
                  bit_list.append(0)
 
-        # print(bit_list)
-        # bit_list = bit_list[1:]
         bit_list.reverse()
-        del bit_list[8:]
+        del bit_list[8:] #truncate the binary to 8 bits just in case the user gave a private key with W > 8 since n was hardcoded to 8 at the start
         bit_list = "".join([str(x) for x in bit_list])
-        # print(int("".join(bit_list), 2))
-        # to_ret.append(chr(int(''.join(bit_list), 2)))
-        # to_ret.append(int(''.join(bit_list), 2))
-        # to_ret.append("".join(bit_list))
         to_ret.append(chr(int(bit_list, 2)))
         #convert the string of bits from binary to decimal then convert that to a char and append it to the return string
-    return to_ret
+    return "".join(to_ret)
 
 
 def main():
@@ -154,20 +147,18 @@ def main():
     # print(decrypt_vigenere(enc, key))
 
     #mhkc
-    private_key = ((6, 8, 28, 47, 141, 369, 991, 2809, 4973), 14850, 7)
-    public_key_answer = (42, 56, 196, 329, 987, 2583, 6937, 4813, 5111)
+    private_key = ((6, 12, 20, 51, 137, 231, 845, 1319, 4823), 13976, 3)
+    public_key_answer = (18, 36, 60, 153, 411, 693, 2535, 3957, 493)
     public_key = create_public_key(private_key)
     # print("My public key: " + str(public_key)) 
     print("Public Key is the right answer: " + str(public_key == public_key_answer))
-    to_encrypt = "KONASWASNOTTHEIMPOSTOR"
+    to_encrypt = "MICHAELTHIBODEAUX"
     enc = encrypt_mhkc(to_encrypt, public_key)
-    encryption_answer = [12793, 15376, 10563, 4869, 12135, 14718, 4869, 12135, 10563, 15376, 2968, 2968, 1043, 7452, 5856, 8439, 385, 15376, 12135, 2968, 15376, 7322]
-    # print("My encryption: " + str(enc)) 
+    encryption_answer = [5097, 4404, 6528, 447, 3993, 4686, 1140, 882, 447, 4404, 2571, 7632, 729, 4686, 3993, 4839, 600]
     print("Encryption is the right answer: " + str(enc == encryption_answer))
 
     dec = decrypt_mhkc(encryption_answer, private_key)
-    print(dec)
-    # print("My decryption: " + str(dec) + " is the right answer: " + str("".join(dec) == to_encrypt))
+    print("My decryption: " + str(dec) + " is the right answer: " + str(dec == to_encrypt))
 
 if __name__ == "__main__":
     main()
