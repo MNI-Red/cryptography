@@ -60,7 +60,8 @@ def decrypt_vigenere(ciphertext, keyword):
 # Arguments: integer
 # Returns: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 def generate_private_key(n=8):
-    W = [rand.randint()]
+    completely_arbitrary_max = 10
+    W = [rand.randint(0, completely_arbitrary_max)]
     for i in range(1, n):
         W.append(rand.randint(sum(W)+1, sum(W)*2))
     Q = W.pop(-1)
